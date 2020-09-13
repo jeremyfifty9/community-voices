@@ -66,4 +66,28 @@ class DisplayError extends Component\View
         $this->finalize($response);
         return $response;
     }
+    public function getErrors($request) {
+
+        $errorsPackageElement = new Helper\SimpleXMLElementExtension('<package/>');
+
+        $packagedErrors = $errorsPackageElement->addChild('domain');
+
+        $packagedIdentity = $errorsPackageElement->addChild('identity');
+        $identity = $this->identityXMLElement($request);
+
+        $packagedIdentity->adopt($this->identityXMLElement($request));
+
+        $errorsModule = new Component\Presenter('Module/Errors');
+        $errorsModuleXML = $errorsModule->generate($errorsPackageElement);
+
+        $domainXMLElement = new Helper\SimpleXMLElementExtension('<domain/>');
+        $domainXMLElement->addChild('main-pane', $errorsModuleXML);
+        $domainXMLElement->addChild('extraJS', "https://cdn.jsdelivr.net/momentjs/latest/moment.min.js https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js error-log-collection");
+
+        $presentation = new Component\Presenter('SinglePane');
+        $response = new HttpFoundation\Response($presentation->generate($domainXMLElement));
+
+        $this->finalize($response);
+        return $response;
+    }
 }

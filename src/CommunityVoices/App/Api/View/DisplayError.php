@@ -9,6 +9,8 @@ use CommunityVoices\App\Api\Component;
 
 class DisplayError extends Component\View
 {
+    const ERRORSLOGPATH = '/var/www/html/log/access.log';
+
     public function __construct(
         Component\SecureContainer $secureContainer,
         MapperFactory $mapperFactory
@@ -23,4 +25,12 @@ class DisplayError extends Component\View
 
         return $response;
     }
+
+    protected function getErrors($request, $errors)
+    {
+        if($errors===false) $response = new HttpFoundation\JsonResponse('');
+        else $response = new HttpFoundation\JsonResponse(["errorLog" => $errors]);
+        return $response;
+    }
+
 }

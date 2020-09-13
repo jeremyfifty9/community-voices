@@ -27,6 +27,7 @@
 
             <!-- TODO: create a route that returns this link or a local one depending on site URL -->
             <link rel="stylesheet" href="https://environmentaldashboard.org/css/bootstrap.css?v=2"/>
+            <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
             <xsl:if test="comfortaa != ''">
                 <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" />
             </xsl:if>
@@ -52,6 +53,7 @@
             </div>
             <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
             <script>
             <![CDATA[

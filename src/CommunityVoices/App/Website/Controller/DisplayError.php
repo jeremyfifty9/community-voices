@@ -8,4 +8,7 @@ class DisplayError
     {
 
     }
+    public function getErrors() {
+
+    }
 }

@@ -99,13 +99,13 @@
     },
 
     "getIdentity": {
-      "notation": "/identity",
-      "method": "get",
-      "defaults": {
-        "resource": "Identification",
-        "action": "getIdentity",
-        "use-api": true
-      }
+        "notation": "/identity",
+        "method": "get",
+        "defaults": {
+            "resource": "Identification",
+            "action": "getIdentity",
+            "use-api": true
+        }
     },
 
     "getAllSlide": {
@@ -208,43 +208,43 @@
     },
 
     "getQuoteBoundaryQuotes": {
-      "notation": "/quotes/{id}/boundary",
-      "method": "get",
-      "defaults": {
-        "resource": "Quote",
-        "action": "getBoundaryQuotes",
-        "use-api": true
-      }
+        "notation": "/quotes/{id}/boundary",
+        "method": "get",
+        "defaults": {
+            "resource": "Quote",
+            "action": "getBoundaryQuotes",
+            "use-api": true
+        }
     },
 
     "getQuoteRelatedSlide": {
-      "notation": "/quotes/{id}/slide",
-      "method": "get",
-      "defaults": {
-        "resource": "Quote",
-        "action": "getQuoteRelatedSlide",
-        "use-api": true
-      }
+        "notation": "/quotes/{id}/slide",
+        "method": "get",
+        "defaults": {
+            "resource": "Quote",
+            "action": "getQuoteRelatedSlide",
+            "use-api": true
+        }
     },
 
     "getQuotePrevQuote": {
-      "notation": "/quotes/{id}/prev",
-      "method": "get",
-      "defaults": {
-        "resource": "Quote",
-        "action": "getQuotePrevQuote",
-        "use-api": true
-      }
+        "notation": "/quotes/{id}/prev",
+        "method": "get",
+        "defaults": {
+            "resource": "Quote",
+            "action": "getQuotePrevQuote",
+            "use-api": true
+        }
     },
 
     "getQuoteNextQuote": {
-      "notation": "/quotes/{id}/next",
-      "method": "get",
-      "defaults": {
-        "resource": "Quote",
-        "action": "getQuoteNextQuote",
-        "use-api": true
-      }
+        "notation": "/quotes/{id}/next",
+        "method": "get",
+        "defaults": {
+            "resource": "Quote",
+            "action": "getQuoteNextQuote",
+            "use-api": true
+        }
     },
 
     "getQuoteUpdate": {
@@ -304,33 +304,33 @@
     },
 
     "getImageRelatedSlide": {
-      "notation": "/images/{id}/slide",
-      "method": "get",
-      "defaults": {
-        "resource": "Image",
-        "action": "getImageRelatedSlide",
-        "use-api": true
-      }
+        "notation": "/images/{id}/slide",
+        "method": "get",
+        "defaults": {
+            "resource": "Image",
+            "action": "getImageRelatedSlide",
+            "use-api": true
+        }
     },
 
     "getImagePrevImage": {
-      "notation": "/images/{id}/prev",
-      "method": "get",
-      "defaults": {
-        "resource": "Image",
-        "action": "getImagePrevImage",
-        "use-api": true
-      }
+        "notation": "/images/{id}/prev",
+        "method": "get",
+        "defaults": {
+            "resource": "Image",
+            "action": "getImagePrevImage",
+            "use-api": true
+        }
     },
 
     "getImageNextImage": {
-      "notation": "/images/{id}/next",
-      "method": "get",
-      "defaults": {
-        "resource": "Image",
-        "action": "getImageNextImage",
-        "use-api": true
-      }
+        "notation": "/images/{id}/next",
+        "method": "get",
+        "defaults": {
+            "resource": "Image",
+            "action": "getImageNextImage",
+            "use-api": true
+        }
     },
 
     "postImageUpdate": {
@@ -363,22 +363,22 @@
     },
 
     "postImageUpload":{
-      "notation": "/images/new/authenticate",
-      "method": "post",
-      "defaults": {
-        "resource": "Image",
-        "action": "postImageUpload"
-      }
+        "notation": "/images/new/authenticate",
+        "method": "post",
+        "defaults": {
+            "resource": "Image",
+            "action": "postImageUpload"
+        }
     },
 
     "sendImage":{
-      "notation": "/uploads/{id}",
-      "method": "get",
-      "defaults": {
-        "resource": "Image",
-        "action": "sendImage",
-        "use-api": true
-      }
+        "notation": "/uploads/{id}",
+        "method": "get",
+        "defaults": {
+            "resource": "Image",
+            "action": "sendImage",
+            "use-api": true
+        }
     },
 
     "getAllArticle": {
@@ -436,13 +436,13 @@
     },
 
     "getArticleRelatedSlides": {
-      "notation": "/articles/{title}/slides",
-      "method": "get",
-      "defaults": {
-        "resource": "Article",
-        "action": "getArticleRelatedSlides",
-        "use-api": true
-      }
+        "notation": "/articles/{title}/slides",
+        "method": "get",
+        "defaults": {
+            "resource": "Article",
+            "action": "getArticleRelatedSlides",
+            "use-api": true
+        }
     },
 
     "getAllLocation": {
@@ -518,22 +518,22 @@
     },
 
     "getAllTag": {
-      "notation": "/tags",
-      "method": "get",
-      "defaults": {
-        "resource": "Tag",
-        "action": "getAllTag"
-      }
+        "notation": "/tags",
+        "method": "get",
+        "defaults": {
+            "resource": "Tag",
+            "action": "getAllTag"
+        }
     },
 
     "postTagUpload": {
-      "notation": "/tags/new",
-      "method": "post",
-      "defaults": {
-        "resource": "Tag",
-        "action": "postTagUpload"
+        "notation": "/tags/new",
+        "method": "post",
+        "defaults": {
+            "resource": "Tag",
+            "action": "postTagUpload"
         }
-     },
+    },
 
      "postTagUpdate": {
        "notation": "/tags/{groupId}/edit",
@@ -546,12 +546,20 @@
       },
 
     "postTagDelete": {
-      "notation": "/tags/{groupId}/delete",
-      "method": "post",
-      "defaults": {
-        "resource": "Tag",
-        "action": "postTagDelete",
-        "use-api": true
-      }
-   }
+        "notation": "/tags/{groupId}/delete",
+        "method": "post",
+        "defaults": {
+            "resource": "Tag",
+            "action": "postTagDelete"
+        }
+    },
+    "getErrors": {
+        "notation": "/error-log",
+        "method": "get",
+        "defaults": {
+            "resource": "DisplayError",
+            "action": "getErrors"
+        }
+    }
+
 }

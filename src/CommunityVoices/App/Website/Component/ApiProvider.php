@@ -2,6 +2,8 @@
 
 namespace CommunityVoices\App\Website\Component;
 
+use CommunityVoices\App\Api\Component\Exception\AccessDenied;
+
 class ApiProvider
 {
     public function getJson($path, $request, $debug = false)
@@ -29,6 +31,17 @@ class ApiProvider
         }
 
         $response = file_get_contents(getenv('API_URL') . $path, false, $context ?? null);
+
+        // Need to check if this is an access denied.
+        // It seems the JSON responses have two '\\', while the HTML responses have one.
+        if (
+            strpos($response, 'CommunityVoices\App\Api\Component\Exception\AccessDenied') !== false ||
+            strpos($response, 'CommunityVoices\\\App\\\Api\\\Component\\\Exception\\\AccessDenied') !== false
+        ) {
+            // Rather than passing the identity, we will just pass if the identity exists or not,
+            // as that is all that AccessDenied needs.
+            throw new AccessDenied(strpos($response, AccessDenied::LOGGED_IN_MESSAGE) !== false);
+        }
 
         if ($debug) {
             echo $response;
