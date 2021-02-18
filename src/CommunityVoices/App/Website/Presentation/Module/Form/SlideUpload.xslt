@@ -252,22 +252,6 @@
                       <label class="custom-control-label" for="approve">Approve</label>
                     </div>
                   </div>
-                  <p class='mb-0'>Select screens for display:</p>
-                  <div class="form-group">
-                    <xsl:variable name="selectedLocs" select="domain/selectedLocs" />
-                    <xsl:for-each select="domain/locCollection/location">
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="screen{id}" name="screens[]" value="{id}">
-                          <xsl:if test="contains($selectedLocs, concat(',', id, ','))">
-                            <xsl:attribute name="checked">checked</xsl:attribute>
-                          </xsl:if>
-                        </input>
-                        <label class="custom-control-label" for="screen{id}">
-                          <xsl:value-of select="label" />
-                        </label>
-                      </div>
-                    </xsl:for-each>
-                  </div>
                   <div id="alert"></div>
                   <input type='submit' value="Update slide" class="btn btn-primary" />
                 </xsl:when>
@@ -283,17 +267,6 @@
                   </div>
                   <div class="form-group">
                     <input type="text" name="decay_end" placeholder="Decay end" class="form-control" />
-                  </div>
-                  <p class='mb-0'>Select screens for display:</p>
-                  <div class="form-group">
-                    <xsl:for-each select="domain/locCollection/location">
-                      <div class="custom-control custom-checkbox" data-end_use="{end_use}">
-                        <input type="checkbox" class="custom-control-input" id="screen{id}" name="screens[]" value="{id}" checked="checked" />
-                        <label class="custom-control-label" for="screen{id}">
-                          <xsl:value-of select="label" />
-                        </label>
-                      </div>
-                    </xsl:for-each>
                   </div>
                   <div id="alert"></div>
                   <input type='submit' value="Create slide" class="btn btn-primary" />

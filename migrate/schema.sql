@@ -2,7 +2,7 @@
 --
 -- Host: cv-mysql    Database: community_voices
 -- ------------------------------------------------------
--- Server version	5.7.29
+-- Server version	5.7.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -64,7 +64,7 @@ CREATE TABLE `community-voices_groups` (
   `label` varchar(255) NOT NULL,
   `type` enum('tag','org-category','content-category') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `community-voices_identities` (
   KEY `parent_id` (`parent_id`,`account_id`,`type`,`fingerprint`,`status`,`expires_on`,`token`,`token_expires_on`,`token_action`),
   CONSTRAINT `community-voices_identities_fk0` FOREIGN KEY (`parent_id`) REFERENCES `community-voices_identities` (`identity_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `community-voices_identities_fk1` FOREIGN KEY (`account_id`) REFERENCES `community-voices_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=441 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=698 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +175,7 @@ CREATE TABLE `community-voices_media` (
   PRIMARY KEY (`id`),
   KEY `community-voices_media_fk0` (`added_by`),
   CONSTRAINT `community-voices_media_ibfk_1` FOREIGN KEY (`added_by`) REFERENCES `community-voices_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4413 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5855 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +209,7 @@ CREATE TABLE `community-voices_media-group-map` (
   KEY `community-voices_media-group-map_fk1` (`group_id`),
   CONSTRAINT `community-voices_media-group-map_fk0` FOREIGN KEY (`media_id`) REFERENCES `community-voices_media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `community-voices_media-group-map_fk1` FOREIGN KEY (`group_id`) REFERENCES `community-voices_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7944 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13183 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,37 +226,7 @@ CREATE TABLE `community-voices_media-location-map` (
   PRIMARY KEY (`id`),
   KEY `media_id` (`media_id`),
   KEY `loc_id` (`loc_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18241 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `community-voices_oberlin_metadata`
---
-
-DROP TABLE IF EXISTS `community-voices_oberlin_metadata`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `community-voices_oberlin_metadata` (
-  `id` int(21) NOT NULL AUTO_INCREMENT,
-  `source_type` varchar(255) DEFAULT NULL,
-  `interviewee_or_source_document` varchar(255) DEFAULT NULL,
-  `organization` varchar(255) DEFAULT NULL,
-  `sponsor_organization` varchar(255) DEFAULT NULL,
-  `topic` varchar(255) DEFAULT NULL,
-  `interviewee_email` varchar(255) DEFAULT NULL,
-  `interviewee_phone` varchar(255) DEFAULT NULL,
-  `url_consent_interview` varchar(255) DEFAULT NULL,
-  `t1_survey` varchar(255) DEFAULT NULL,
-  `t2_survey` varchar(255) DEFAULT NULL,
-  `url_transcription` varchar(255) DEFAULT NULL,
-  `url_article` varchar(255) DEFAULT NULL,
-  `date_article_approved` varchar(255) DEFAULT NULL,
-  `url_photograph` varchar(255) DEFAULT NULL,
-  `suggested_photo_source` varchar(255) DEFAULT NULL,
-  `suggested_photo_in_cv` varchar(255) DEFAULT NULL,
-  `create_a_slide` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=41309 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,11 +261,9 @@ CREATE TABLE `community-voices_quotes` (
   `date_recorded` datetime DEFAULT NULL,
   `public_document_link` varchar(255) DEFAULT NULL,
   `source_document_link` varchar(255) DEFAULT NULL,
-  `metadata_id` int(21) DEFAULT NULL,
+  `extra_stuff` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`media_id`),
-  KEY `community-voices_quotes_fk1` (`metadata_id`),
-  CONSTRAINT `community-voices_quotes_fk0` FOREIGN KEY (`media_id`) REFERENCES `community-voices_media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `community-voices_quotes_fk1` FOREIGN KEY (`metadata_id`) REFERENCES `community-voices_oberlin_metadata` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `community-voices_quotes_fk0` FOREIGN KEY (`media_id`) REFERENCES `community-voices_media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -317,7 +285,6 @@ CREATE TABLE `community-voices_slides` (
   `decay_percent` int(21) DEFAULT NULL,
   `decay_start` datetime DEFAULT NULL,
   `decay_end` datetime DEFAULT NULL,
-  `end_use` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`media_id`),
   UNIQUE KEY `image_id` (`image_id`,`quote_id`),
   UNIQUE KEY `image_id_2` (`image_id`,`quote_id`),
@@ -375,9 +342,9 @@ CREATE TABLE `community-voices_users` (
   `email` varchar(255) NOT NULL,
   `lname` varchar(100) DEFAULT NULL,
   `fname` varchar(100) DEFAULT NULL,
-  `role` enum('unverified','user','manager','admin') NOT NULL DEFAULT 'user',
+  `role` enum('unverified','user','manager','admin') NOT NULL DEFAULT 'unverified',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -389,4 +356,4 @@ CREATE TABLE `community-voices_users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-01 20:38:56
+-- Dump completed on 2021-02-15 11:28:45

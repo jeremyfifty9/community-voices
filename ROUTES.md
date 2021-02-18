@@ -64,9 +64,3 @@ The following routes are accessible from a management interface within the appli
     /tags/:id/edit                                  Edit tags with id
     /tags/:id/delete                                Delete tags with id
     /tags/new                                       Create a new tag
-
-    /locations                                      Lists all locations
-    /locations/:id                                  *Lookup locations with id
-    /locations/:id/edit                             Edit locations with id
-    /locations/:id/delete                           Delete locations with id
-    /locations/new                                  Create a new location

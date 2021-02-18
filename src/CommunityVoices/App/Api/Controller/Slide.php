@@ -16,7 +16,6 @@ class Slide extends Component\Controller
     protected $tagLookup;
     protected $quoteLookup;
     protected $imageLookup;
-    protected $locationLookup;
 
     public function __construct(
         Component\SecureContainer $secureContainer,
@@ -25,8 +24,7 @@ class Slide extends Component\Controller
         Service\SlideManagement $slideManagement,
         Service\TagLookup $tagLookup,
         Service\QuoteLookup $quoteLookup,
-        Service\ImageLookup $imageLookup,
-        Service\LocationLookup $locationLookup
+        Service\ImageLookup $imageLookup
     ) {
         parent::__construct($secureContainer);
 
@@ -36,7 +34,6 @@ class Slide extends Component\Controller
         $this->tagLookup = $tagLookup;
         $this->quoteLookup = $quoteLookup;
         $this->imageLookup = $imageLookup;
-        $this->locationLookup = $locationLookup;
     }
 
     /**
@@ -99,7 +96,6 @@ class Slide extends Component\Controller
     public function getSlideUpload()
     {
         $stateObserver = $this->tagLookup->findAll(true);
-        $stateObserver = $this->locationLookup->findAll($stateObserver, true);
         $stateObserver = $this->imageLookup->photographers($stateObserver, true);
         $stateObserver = $this->imageLookup->orgs($stateObserver, true);
         $this->quoteLookup->attributions($stateObserver);
@@ -138,8 +134,6 @@ class Slide extends Component\Controller
         $slideId = (int) $request->attributes->get('id');
 
         $stateObserver = $this->tagLookup->findAll(true);
-        $stateObserver = $this->locationLookup->findAll($stateObserver, true);
-        $stateObserver = $this->locationLookup->locationsFor($slideId, $stateObserver, true);
         $stateObserver = $this->imageLookup->photographers($stateObserver, true);
         $stateObserver = $this->imageLookup->orgs($stateObserver, true);
         $stateObserver = $this->quoteLookup->attributions($stateObserver, true);

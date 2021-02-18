@@ -464,15 +464,6 @@
       }
     },
 
-    "getAllLocation": {
-        "notation": "/locations",
-        "method": "get",
-        "defaults": {
-            "resource": "Location",
-            "action": "getAllLocation"
-        }
-    },
-
     "getAllContentCategory": {
         "notation": "/content-categories",
         "method": "get",

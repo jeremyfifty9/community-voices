@@ -59,9 +59,6 @@ class Slide extends Component\View
         $stateObserver->setSubject('tagLookup');
         $tag = $stateObserver->getEntry('tag')[0]->toArray();
 
-        $stateObserver->setSubject('locLookup');
-        $loc = $stateObserver->getEntry('loc')[0]->toArray();
-
         $stateObserver->setSubject('quoteLookup');
         $quote_attributions['attributionCollection'] = $stateObserver->getEntry('attribution')[0]->attributionCollection;
 
@@ -69,7 +66,7 @@ class Slide extends Component\View
         $image_photographers['PhotographerCollection'] = $stateObserver->getEntry('photographer')[0]->photographerCollection;
         $image_orgs['OrgCollection'] = $stateObserver->getEntry('org')[0]->orgCollection;
 
-        $response = new HttpFoundation\JsonResponse(array_merge($tag, $quote_attributions, $image_photographers, $image_orgs, $loc));
+        $response = new HttpFoundation\JsonResponse(array_merge($tag, $quote_attributions, $image_photographers, $image_orgs));
 
         return $response;
     }

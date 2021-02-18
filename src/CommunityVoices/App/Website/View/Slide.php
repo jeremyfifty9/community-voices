@@ -274,12 +274,6 @@ class Slide extends Component\View
             $this->transcriber->toXml($obj)
         );
 
-        $obj = new \stdClass;
-        $obj->locCollection = $json->locCollection;
-        $locXMLElement = new SimpleXMLElement(
-            $this->transcriber->toXml($obj)
-        );
-
         $contentCategoryXMLElement = new SimpleXMLElement(
             $this->transcriber->toXml(
                 $this->apiProvider->getJson('/content-categories', $request)
@@ -297,7 +291,6 @@ class Slide extends Component\View
         $packagedSlide->adopt($attrXMLElement);
         $packagedSlide->adopt($photoXMLElement);
         $packagedSlide->adopt($orgXMLElement);
-        $packagedSlide->adopt($locXMLElement);
         $packagedSlide->adopt($contentCategoryXMLElement);
         $packagedIdentity = $slidePackageElement->addChild('identity');
         $packagedIdentity->adopt($this->identityXMLElement($request));
