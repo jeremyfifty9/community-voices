@@ -103,6 +103,9 @@
         ["CommunityVoices\\App\\Api\\Controller\\Image::postImageUnpair", {"allow" : "admin"}],
         ["CommunityVoices\\App\\Api\\View\\Image::postImageUnpair", {"allow" : "admin"}],
 
+        ["CommunityVoices\\App\\Api\\Controller\\Image::postMetaDataFields", {"allow" : "admin"}],
+        ["CommunityVoices\\App\\Api\\View\\Image::postMetaDataFields", {"allow" : "admin"}],
+
         ["CommunityVoices\\App\\Api\\Controller\\Landing::getLanding", {"allow" : "guest"}],
         ["CommunityVoices\\App\\Api\\View\\Landing::getLanding", {"allow" : "guest"}],
 

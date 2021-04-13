@@ -105,4 +105,10 @@ class Image extends Component\View
         return new HttpFoundation\JsonResponse(true);
 
     }
+
+    protected function postMetaDataFields() {
+
+        return new HttpFoundation\JsonResponse(true);
+        
+    }
 }

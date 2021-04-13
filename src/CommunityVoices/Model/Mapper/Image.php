@@ -186,4 +186,22 @@ class Image extends Media
 
         $statement->execute();
     }
+
+    public function getMetaDataFields() {
+        $query = "SELECT `COLUMN_NAME` 
+        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+        WHERE `TABLE_SCHEMA`='community_voices' 
+            AND `TABLE_NAME`='community-voices_image_metadata'";
+        $statement = $this->conn->prepare($query);
+        $statement->execute();
+        $queryResult = $statement->fetchAll();
+        
+        $allColumnsIncludingId = array_map(function($el) {
+           return $el['COLUMN_NAME'];
+        },$queryResult);
+
+        $allColumnsExcludingId = array_slice($allColumnsIncludingId,1);
+        return $allColumnsExcludingId;
+    }
+    
 }

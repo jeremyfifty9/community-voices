@@ -39,6 +39,7 @@ then
 	-e "MYSQL_HOST=159.89.232.129" -e "MYSQL_DB=community_voices" -e "MYSQL_PORT=$port" -e "MYSQL_USER=$user" -e "MYSQL_PASS=$pass" \
 	-e SERVER=`hostname` -e APP_ENV=production \
 	-e API_URL=https://www.environmentaldashboard.org/community-voices/api \
+	-e DOCKER_CONTAINER_NAME=PROD_CV \
 	--name PROD_CV community-voices
 else
 	# local machine:
@@ -52,5 +53,6 @@ else
 	--link cv-mysql:cv-mysql \
 	-e SERVER=`hostname` -e APP_ENV=development \
 	-e API_URL=http://localhost:80/community-voices/api \
+	-e DOCKER_CONTAINER_NAME=LOCAL_CV \
 	--name LOCAL_CV community-voices
 fi

@@ -13,7 +13,7 @@ class Image extends Component\Controller
     protected $imageLookup;
     protected $imageManagement;
     protected $tagLookup;
-
+    
     public function __construct(
         Component\SecureContainer $secureContainer,
         Component\RecognitionAdapter $recognitionAdapter,
@@ -160,5 +160,9 @@ class Image extends Component\Controller
     {
         $id = $request->attributes->get('id');
         $this->imageLookup->nextImage2($id);
+    }
+
+    protected function postMetaDataFields($request) {
+        $this->imageManagement->createNewBatchUploadFields($request->request->get('fields'));
     }
 }

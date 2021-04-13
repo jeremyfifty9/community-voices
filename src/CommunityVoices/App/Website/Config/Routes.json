@@ -400,6 +400,16 @@
       }
     },
 
+    "postImageMetaDataFields":{
+        "notation": "/images/metadata",
+        "method": "post",
+        "defaults": {
+          "resource": "Image",
+          "action": "postMetaDataFields",
+          "use-api": true
+        }
+      },
+
     "getAllArticle": {
         "notation": "/articles",
         "method": "get",
