@@ -184,7 +184,25 @@ class Image extends Media
         $statement->bindValue(':photographer', $image->getPhotographer());
         $statement->bindValue(':organization', $image->getOrganization());
 
+        $lastImageId = intval($this->conn->lastInsertId());
+
         $statement->execute();
+
+        if($image->getMetaData() && $this->getMetaDataFields()) { 
+            // only update metadata if a) user has wrong metadata migration script (see /migrate/scripts/createNewImageBatchUploadFields.php)
+            // and b) user has passed in associated metadata into request
+
+            $metaDataId = $this->setMetaDataFields($image->getMetaData());
+            $linkMdTable = "UPDATE `community-voices_images`
+                            SET metadata_id = :metadata_id
+                            WHERE media_id = :last_image_id";
+
+            $statement = $this->conn->prepare($linkMdTable);
+            $statement->bindValue(':metadata_id', $metaDataId);
+            $statement->bindValue(':last_image_id', $lastImageId);
+
+            $statement->execute();
+        }
     }
 
     public function getMetaDataFields() {
@@ -200,8 +218,31 @@ class Image extends Media
            return $el['COLUMN_NAME'];
         },$queryResult);
 
+        if (count($allColumnsIncludingId)==0) { // we haven't run all of the migrations we have needed to create image metadata table!
+            return false;
+        }
+
         $allColumnsExcludingId = array_slice($allColumnsIncludingId,1);
         return $allColumnsExcludingId;
+    }
+
+    private function setMetaDataFields($metaData) {
+        $fieldsInserted = implode(', ', array_keys($metaData));
+
+        $columnsArrayWithBackticks = array_map(function($val){ // allow for spaces
+            return "`" . $val . "`";
+        },array_keys($metaData));
+        $fieldsInserted = implode(', ', $columnsArrayWithBackticks);
+        
+        $valuesArrayWithSingleQuotes = array_map(function($val){
+            return "'" . $val . "'";
+        },array_values($metaData));
+        $valuesInserted = implode(', ', $valuesArrayWithSingleQuotes);
+        $query = "INSERT INTO `community-voices_image_metadata` ($fieldsInserted) VALUES ($valuesInserted)";
+        $this->conn->exec($query);
+
+        $idToLink = $this->conn->lastInsertId();
+        return intval($idToLink);
     }
     
 }

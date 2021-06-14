@@ -183,7 +183,7 @@ class Quote extends Component\Controller
         if (! (isset($source) && (isset($quote)))) return [[],[],["item" => self::WRONG_NAMES_FILES],[],[]];
         else {
             $fp = new Component\FileProcessor();
-            return $fp->csvReadBatch($source->getPathname(),$quote->getPathname());
+            return $fp->parseQuoteBatchUpload($source->getPathname(),$quote->getPathname());
         }
     }
 

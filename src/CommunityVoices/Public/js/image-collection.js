@@ -154,3 +154,75 @@ function submitAll() {
         submitEdit(this, 'all');
     });
 }
+
+$("body").on('click', '#fileUploadButton', function (c)  {
+	$('#csvFile').trigger("click");
+});
+
+$("body").on("change","#csvFile",function(){
+  let myForm = document.getElementById('batchUploadForm');
+  $('#alert').addClass('alert-success').removeClass('d-none alert-danger');
+  $('#alert-content').text('Updating...');
+	$.ajax({
+    url : $("#batchUploadForm").attr('action'),
+    type: $("#batchUploadForm").attr('method'),
+    data: new FormData(myForm),
+    processData: false,
+    contentType: false,
+    cache: false,
+    enctype: 'multipart/form-data',
+    success: function (textStatus, status) {
+      $('#alert-content').text('Batch Upload Completed! Refresh to see changes');
+    },
+    error: function(xhr, textStatus, error) {
+      $('#alert').addClass('alert-danger').removeClass('d-none alert-success');
+      $('#alert-content').text('Batch Upload Failed!');
+    }
+  });
+});
+
+$("body").on("click","#metadataChooseButton",function(){
+  if(! $("#metadataUploadForm td").length) {
+    $("#metadataUploadForm").append("<tr><td><div style='font-size:12px;'><input type='text' name='fields[]' placeholder='metadata'></input></div></td><td><div style='font-size:8px;'><button class='addMetadata'>Add</button></div></td></tr>");
+    $("#metadataUploadForm").append("<div style='font-size:12px;'><button id='metadataSubmit'>Submit</button></div>");
+  } else {
+    $("#metadataUploadForm tr").remove();
+    $("#metadataUploadForm div").remove();
+  }
+});
+
+$("body").on("click","#metadataUploadForm .addMetadata",function(b){
+  b.preventDefault();
+  $("#metadataUploadForm tr").last().after("<tr><td><div style='font-size:12px;'><input type='text' name='fields[]' placeholder='metadata'></input></div></td><td><div style='font-size:8px;'><button class='addMetadata'>Add</button></div></td></tr>");
+});
+
+$("body").on("click","#metadataUploadForm #metadataSubmit",function(b){
+  b.preventDefault();
+  const metadata = $('#metadataUploadForm input[type="text"]').map(function() {
+    return this.value;
+  }).get();
+
+  if(confirm("Please confirm that these fields are what you want \n\n\n" + metadata + "\n\n\n THERE IS NO GOING BACK!!!!")) {
+    $.ajax({
+      url : $("#metadataUploadForm").attr('action'),
+      type: $("#metadataUploadForm").attr('method'),
+      data: $("#metadataUploadForm").serializeArray(),
+      success: function (textStatus, status) {
+        const newFormElText = 
+        "<form action='/community-voices/api/images/new/batch' method='post' enctype='multipart/form-data' id='batchUploadForm' style='font-size:0px;'> \
+            <input class='custom-file-input' id='csvFile' type='file' name='file' accept='.csv' style='display: none;'/> \
+            <input type='button' class='btn btn-outline-primary mr-2' value='Batch Upload' id='fileUploadButton' style='font-size:1rem;'></input>\
+        </form>";
+        const elz = document.getElementById("metadataUploadForm");
+        const formSibling = elz.previousElementSibling;
+        elz.remove();
+        formSibling.insertAdjacentHTML('afterend',newFormElText);
+      },
+      error: function(xhr, textStatus, error) {
+        alert("Something went wrong. Please contact dashboard@oberlin.edu")
+      }
+    });
+  }
+});
+
+

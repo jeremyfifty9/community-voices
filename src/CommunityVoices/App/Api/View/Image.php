@@ -28,7 +28,6 @@ class Image extends Component\View
 
         $stateObserver->setSubject('imageLookup');
         $image = $stateObserver->getEntry('image')[0];
-        // var_dump($image->toArray()['image']['tagCollection']['groupCollection']);die;
 
         $response = new HttpFoundation\JsonResponse($image->toArray());
 
@@ -42,6 +41,7 @@ class Image extends Component\View
 
         $stateObserver->setSubject('imageFindAll');
         $imageCollection = $stateObserver->getEntry('imageCollection')[0]->toArray();
+
         $imageCollection['imageCollectionPhotographers'] = $stateObserver->getEntry('imageCollectionPhotographers')[0];
         $imageCollection['imageCollectionOrgs'] = $stateObserver->getEntry('imageCollectionOrgs')[0];
 
@@ -56,6 +56,11 @@ class Image extends Component\View
     protected function postImageUpload()
     {
         // intentionally blank
+    }
+
+    protected function postImageBatchUpload() 
+    {
+        return new HttpFoundation\JsonResponse(true);
     }
 
     protected function getImageRelatedSlide()
@@ -110,5 +115,17 @@ class Image extends Component\View
 
         return new HttpFoundation\JsonResponse(true);
         
+    }
+
+    protected function getMetaDataFields() {
+        $clientState = $this->mapperFactory->createClientStateMapper();
+        $stateObserver = $clientState->retrieve();
+
+        $stateObserver->setSubject('imageLookup');
+        $metaData = $stateObserver->getEntry('metaDataFields')[0];
+ 
+        $response = new HttpFoundation\JsonResponse($metaData);
+
+        return $response;
     }
 }

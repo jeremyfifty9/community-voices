@@ -368,4 +368,19 @@ class ImageLookup
         $clientState = $this->mapperFactory->createClientStateMapper(Mapper\ClientState::class);
         $clientState->save($this->stateObserver);
     }
+
+    public function metaDataFields()
+    {
+        $mapper = $this->mapperFactory->createDataMapper(Mapper\Image::class);
+        $metaDataFields = $mapper->getMetaDataFields();
+
+        if(empty($metaDataFields) && is_array($metaDataFields)) $metaDataFields = "empty";
+        // distinguish between empty array and false
+
+        $this->stateObserver->setSubject('imageLookup');
+        $this->stateObserver->addEntry('metaDataFields', ['metadata' => $metaDataFields]);
+
+        $clientState = $this->mapperFactory->createClientStateMapper(Mapper\ClientState::class);
+        $clientState->save($this->stateObserver);
+    }
 }

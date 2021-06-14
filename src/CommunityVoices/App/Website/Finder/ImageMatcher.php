@@ -49,7 +49,7 @@ class ImageMatcher
      * @param  String $fn filepath to image
      * @return String generated hash
      */
-    private function hash($fn)
+    public function hash($fn)
     {
         return $this->hasher->hash($fn)->toHex();
     }

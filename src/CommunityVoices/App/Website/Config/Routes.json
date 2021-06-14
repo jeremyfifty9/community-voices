@@ -390,6 +390,16 @@
       }
     },
 
+    "postImageBatchUpload":{
+        "notation": "/images/new/batch",
+        "method": "post",
+        "defaults": {
+          "resource": "Image",
+          "action": "postImageBatchUpload",
+          "use-api": true
+        }
+      },
+
     "sendImage":{
       "notation": "/uploads/{id}",
       "method": "get",
@@ -399,6 +409,17 @@
         "use-api": true
       }
     },
+
+    "getImageMetaDataFields":{
+        "notation": "/images/metadata/all",
+        "method": "get",
+        "defaults": {
+          "resource": "Image",
+          "action": "getMetaDataFields",
+          "use-api": true
+        }
+      },
+
 
     "postImageMetaDataFields":{
         "notation": "/images/metadata",

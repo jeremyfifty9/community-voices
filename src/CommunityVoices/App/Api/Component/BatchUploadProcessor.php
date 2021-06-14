@@ -3,7 +3,7 @@
  namespace CommunityVoices\App\Api\Component;
  use Symfony\Component\HttpFoundation;
 
- class FileProcessor {
+ class BatchUploadProcessor {
      const ERR_NO_ATTRIBUTIONS = 'The source table must provide an "attribution" column';
      const ERR_NO_CONTENT_CATEGORIES = 'The quotes table must provide a "content category 1" column';
      const ERR_NO_IDENTIFIER = 'Both sheets must provide an "identifier" column';
@@ -21,6 +21,7 @@
          'Attribution',
          'Sub-Attribution',
          'Organization',
+         'Sponsor Organization',
          'Topic/Theme of Interview',
          'URL Source Document',
          'Interviewee Email',
@@ -49,14 +50,13 @@
          'Tag 3',
          'Tag 4',
          'Tag 5',
-         'Create a Slide',
-         'Sponsor Organization'
+         'Create a Slide'
      ];
 
      public function tailRead($filepath, $lines, $endLine = PHP_INT_MAX, $startDate = false, $endDate = false) {
          // from error page
      }
-     public function parseQuoteBatchUpload($sourceFilePath, $quoteFilePath) {
+     public function csvReadBatch($sourceFilePath, $quoteFilePath) {
          $columnNameErrors = [];
          $columnNameWarnings = ["unrecognized" => [], "expected" => []];
          $unpairedQuotes = [];
@@ -80,6 +80,7 @@
          // There will be errors/warnings on three levels: top level (column names), source level (relating to source info), quotes level (relating to quotes info)
          // any errors on the top level will require a re upload
 
+         // NOTE: Skip the second row of the source file due to format given by John
          // first pass through source sheet, creating entry for each interview. Later we will add list of quotes for each interview
          if (($f = fopen($sourceFilePath, "r")) !== FALSE) {
            $columnOrder = []; // used to track column locations since we are going entirely by name instead of order
@@ -90,24 +91,25 @@
                    array_push($columnOrder,$formattedColumn);
                } else {
                    array_push($columnOrder, "unrecognized");
-                   array_push($columnNameWarnings["unrecognized"],["item" => [$column . " (Sources Sheet)"]]); // NOTE: use this format with "item" to make it easier to call card.xslt (unless you want to change that)
+                   array_push($columnNameWarnings["unrecognized"],["item" => [$column]]); // NOTE: use this format with "item" to make it easier to call card.xslt (unless you want to change that)
                }
            }
-
-           // These are both major errors. There is no need to parse the rest of the sheet as uploading will not be allowed if one of these errors occurs
-           if(!in_array("attribution",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_ATTRIBUTIONS]]);
-           if(!in_array("identifier",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_IDENTIFIER]]);
 
            for($i = 0; $i < count($formattedSourceNames); $i++) {
                $formattedSourceName = $formattedSourceNames[$i];
                $unformattedSourceName = self::BATCH_SOURCE_DATA[$i];
                if (!in_array($formattedSourceName,$columnOrder))
-                 array_push($columnNameWarnings["expected"],["item" => [$unformattedSourceName . " (Sources Sheet)"]]);
+                 array_push($columnNameWarnings["expected"],["item" => [$unformattedSourceName]]);
            }
+
+           if(!in_array("attribution",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_ATTRIBUTIONS]]);
+           if(!in_array("identifier",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_IDENTIFIER]]);
+
+           // These are both major errors. There is no need to parse the rest of the sheet as uploading will not be allowed if one of these errors occurs
 
            $sheetData = [];
            if (empty($columnNameErrors))  {
-              fgetcsv($f); // skip the second row of the source file
+              fgetcsv($f);
                while (($data = fgetcsv($f)) !== FALSE) {
                    $dataToAdd = ['rowData' => []];
                    $identifier = false;
@@ -144,24 +146,23 @@
                      array_push($columnOrder,$formattedColumn);
                  } else {
                      array_push($columnOrder,"unrecognized");
-                     array_push($columnNameWarnings["unrecognized"],["item" => [$column . " (Quotes Sheet)"]]);
+                     array_push($columnNameWarnings["unrecognized"],["item" => [$column]]);
                  }
              }
-
-             // Below are both major errors. There is no need to parse the rest of the sheet as uploading will not be allowed if one of these errors occurs
-             if(!in_array("contentcategory1",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_CONTENT_CATEGORIES]]);
-             if(!in_array("editedquotes",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_QUOTE]]);
-             if(!in_array("identifier",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_IDENTIFIER]]);
 
              for($i = 0; $i < count($formattedQuoteNames); $i++) {
                  $formattedQuoteName = $formattedQuoteNames[$i];
                  $unformattedQuoteName = self::BATCH_QUOTE_DATA[$i];
                  if (!in_array($formattedQuoteName,$columnOrder))
-                   array_push($columnNameWarnings["expected"],["item" => [$unformattedQuoteName . " (Quotes Sheet)"]]);
+                   array_push($columnNameWarnings["expected"],["item" => [$unformattedQuoteName]]);
              }
 
+             if(!in_array("contentcategory1",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_CONTENT_CATEGORIES]]);
+             if(!in_array("editedquotes",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_QUOTE]]);
+             if(!in_array("identifier",$columnOrder)) array_push($columnNameErrors,["item" => [self::ERR_NO_IDENTIFIER]]);
+             // All three of these are major errors. There is no need to parse the rest of the sheet as uploading will not be allowed if one of these errors occurs
+
              if (empty($columnNameErrors))  {
-                 fgetcsv($f); // skip the second row of the quote file
                  while (($data = fgetcsv($f)) !== FALSE) {
                      $dataToAdd = ["contentcategories" => ["formattedName" => "contentcategories", "all" => [], "error" => null], "tags" => ["formattedName" => "tags", "all" => []]];
                      $identifier = false;
@@ -197,32 +198,10 @@
          }
          return [$sheetData,$columnNameWarnings,$columnNameErrors,$unpairedQuotes,$validIdentifiers];
      }
-
      private function cleanString($s) {
          return strtolower(preg_replace(["/[^a-zA-Z0-9]/","/\s/"], "", $s));
      }
-
      private function replaceTextInTags($s) {
          return preg_replace("/<(.+?)>/","",$s);
-     }
-
-     public function csvToAssociativeArray($filepath) {
-        // https://stackoverflow.com/questions/4801895/csv-to-associative-array
-        $array = $fields = array(); $i = 0;
-        $file = fopen($filepath, "r");
-        if ($file) {
-            while (($row = fgetcsv($file, 4096)) !== false) {
-                if (empty($fields)) {
-                    $fields = $row;
-                    continue;
-                }
-                foreach ($row as $k=>$value) {
-                    $array[$i][$fields[$k]] = $value;
-                }
-                $i++;
-            }
-            fclose($file);
-        }
-        return $array;
      }
  }

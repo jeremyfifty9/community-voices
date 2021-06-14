@@ -7,6 +7,8 @@
 	<xsl:variable name="isManager" select="package/identity/user/role = 'manager'
 		or package/identity/user/role = 'administrator'"/>
 
+  <xsl:variable name="isAdmin" select="package/identity/user/role = 'administrator'"/>
+
 	<xsl:variable name="status" select="package/domain/status"/>
   <xsl:variable name="search" select="package/domain/search"/>
 	<xsl:variable name="tags" select="package/domain/tags"/>
@@ -15,6 +17,7 @@
   <xsl:variable name="order" select="package/domain/order"/>
   <xsl:variable name="unused" select="package/domain/unused"/>
   <xsl:variable name="allTags" select="package/domain/tagCollection/tag" />
+  <xsl:variable name="metadata" select="package/domain/metadata" />
 
 	<xsl:template match="/package">
     <xsl:if test="$isManager">
@@ -103,7 +106,22 @@
 		<xsl:with-param name="rightButtons">
 			<xsl:if test="$isManager">
   				<a class="btn btn-outline-primary mr-2" href="/community-voices/images/new" data-toggle="modal" data-target="#createModal">+ Add image</a>
-  		  	</xsl:if>
+          <xsl:choose>
+            <xsl:when test="$metadata !=''">
+              <form action='/community-voices/api/images/new/batch' method='post' enctype='multipart/form-data' id="batchUploadForm" style="font-size:0px;">
+                    <input class="custom-file-input" id="csvFile" type='file' name='file' accept='.csv' style="display: none;"/>
+                    <input type="button" class="btn btn-outline-primary mr-2" value="Batch Upload" id="fileUploadButton" style="font-size:1rem;"></input>
+              </form>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="$isAdmin">
+                  <form action='/community-voices/api/images/metadata' method='post' id="metadataUploadForm" style="font-size:0px;">
+                      <input type="button" class="btn btn-outline-primary mr-2" value="+ Choose MD fields" id="metadataChooseButton" style="font-size:1rem;"></input>
+                  </form>
+              </xsl:if>
+            </xsl:otherwise>
+          </xsl:choose>
+  		  </xsl:if>
 
 			<xsl:call-template name="userButtons" />
 		</xsl:with-param>

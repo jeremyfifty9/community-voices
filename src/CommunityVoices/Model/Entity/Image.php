@@ -6,6 +6,7 @@ use CommunityVoices\Model\Contract\FlexibleObserver;
 
 class Image extends Media
 {
+    CONST ERR_INVALID_FILE_FORMAT = "File must have an image format!";
     private $filename; /* @TODO required */
 
     private $title;
@@ -20,6 +21,8 @@ class Image extends Media
     private $relatedSlide;
 
     public $type;
+
+    private $metaData;
 
     public function __construct()
     {
@@ -127,6 +130,16 @@ class Image extends Media
                 'width' => (int) $parts[3]
             ];
         }
+    }
+
+    public function setMetaData($metaData,$validMetaData) {
+        $this->metaData = array_filter($metaData,function($key) use ($validMetaData) {
+            return in_array($key,$validMetaData);
+        },ARRAY_FILTER_USE_KEY);
+    }
+
+    public function getMetaData() {
+        return $this->metaData;
     }
 
     public function toArray()
