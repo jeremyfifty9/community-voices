@@ -19,6 +19,13 @@ foreach ($galleries as $gallery => $numerator) {
         $galleries[$gallery] = $_GET[$gallery];
     }
 }
+
+if (isset($_GET['interval'])) {
+  $interval = $_GET['interval'];
+} else {
+  $interval = '7000';
+}
+
 if (isset($_GET['search'])) {
   $param = "'%{$_GET['search']}%'";
   $search_quote_query = 'AND quote_id IN (SELECT `community-voices_quotes`.media_id FROM `community-voices_quotes` WHERE text LIKE '.($param).' OR attribution LIKE '.($param).' OR sub_attribution LIKE '.($param).')';
@@ -97,25 +104,20 @@ shuffle($files);
     <link rel="shortcut icon" href="/favicon.ico?v=9ByOqqx0o3">
     <link rel="stylesheet" href="https://environmentaldashboard.org/css/bootstrap.css?v=2">
     <link rel="stylesheet" href="/community-voices/public/css/landing.css">
+    <link rel="stylesheet" href="/community-voices/public/css/embeddable.css">
     <meta name="theme-color" content="#000000">
     <title>Community Voices</title>
   </head>
 
-  <style>
-    .embed-responsive {
-        height: 100vh;
-    }
-  </style>
-
   <body style="background: #000">
-    <div id="carouselIndicators" class="carousel slide" data-ride="carousel" data-interval="7000">
+    <div id="carouselIndicators" class="carousel slide" data-ride="carousel" data-interval="<?php echo $interval; ?>">
       <div class="carousel-inner" ontransitionend="loadMore()">
         <div class="carousel-item active"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="slide1" style="pointer-events: none;" src="<?php echo $files[0]; ?>"></iframe></div></div>
       </div>
-      <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev" style="">
+      <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span>
       </a>
-      <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next" style="">
+      <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span>
       </a>
     </div>
@@ -153,6 +155,11 @@ shuffle($files);
       </div>
     </div>
 
+    <div id="search" class="input-group input-group-lg">
+      <input id="search_input" name="search" type="text" class="form-control" aria-label="Search Community Voices" placeholder="Search for slides" style="background: url(/community-voices/public/images/search.svg) no-repeat left 1rem center;background-size: 20px 20px;padding-left: 3rem;background-color: white;">
+      <button type="submit" class="btn btn-outline-primary form-control" style="max-width:15%;min-width: 100px;background-color: white;" onclick="setSearch(this)">Search</button>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -162,6 +169,10 @@ shuffle($files);
 
     function setCategory(category) {
       window.location.search = `content_category[]=${category.dataset.cc}`
+    }
+
+    function setSearch(query) {
+      window.location.search = `search=${document.getElementById('search_input').value}`
     }
 
     function loadMore() {
@@ -174,12 +185,30 @@ shuffle($files);
     }
 
     $(document).ready(function(){
-      if (window.location.hash !== "#buttons") {
+      const hash = window.location.hash.split("&");
+      const search = window.location.search;
+
+      let adjust = 74;
+      if (!hash.includes("buttons") && !hash.includes("#buttons")) {
         document.getElementById("buttons").style.display = "none";
+        adjust += 20;
+      }
+      if (!hash.includes("search") && !hash.includes("#search")) {
+        document.getElementById("search").style.display = "none";
+        adjust += 6;
       }
       for(var i=1; i < (paths.length < 10 ? paths.length : 10); i++) {
         $('<div class="carousel-item"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="slide' + (i + 1) + '" style="pointer-events: none;" src="' + paths[i]+ '"></iframe></div></div>').appendTo('.carousel-inner');
       }
+
+      if (search.includes('search=')) {
+        search_query = search.substring(search.indexOf('search='),);
+        search_query = ((search_query.indexOf('&') != -1) ? search_query.substring(7, search_query.indexOf('&')) : search_query.substring(7,));
+        document.getElementById('search_input').value = search_query;
+      }
+
+      var r = document.querySelector(':root');
+      r.style.setProperty('--adjustment', `${adjust}vh`);
     });
     </script>
 
